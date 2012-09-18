@@ -1,17 +1,17 @@
 {
-  "name": "cassette-express",
-  "description": "Punk, carefree Browser-side Javascript Asset Bundling for Express sites",
+  "name": "browser-exporter",
+  "description": "Sharing of client side and server side code solved once and for all.",
   "keywords": [
     "javascript",
     "asset management",
     "client-side",
     "depenency management",
     "bundling",
-    "merging",
-    "minification"
+    "commonjs",
+    "require"
   ],
-  "version": "0.5.7",
-  "homepage": "https://CharlotteGore@github.com/CharlotteGore/Cassette-Express.git",
+  "version": "0.0.1",
+  "homepage": "https://CharlotteGore@github.com/CharlotteGore/Browser-Exporter.git",
   "author": {
     "name": "Charlotte Gore",
     "email": "conspiracygore@gmail.com",
@@ -33,13 +33,13 @@
     "mocha": "*",
     "should": "*"
   },
-  "main": "lib/cassette",
+  "main": "lib/browser-exporter",
   "directories": {
     "lib": "lib"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/CharlotteGore/Cassette-Express.git"
+    "url": "git://github.com/CharlotteGore/Browser-Exporter.git"
   },
   "engines": {
     "node": "*"
