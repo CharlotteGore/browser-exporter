@@ -1,111 +1,24 @@
-#Cassette Express
+#BrowserX
 
-The short version: CI friendly Javascript asset bundling for those of us who don't want to rewrite our client side Javascript as CommonJS modules
+A module for Express to export JS modules to the browser.
 
-The long version:
+Write your client side javascript as node modules. Keep it with your server side code. Maintain one code base. Export your client side modules to the browser.
 
-- Reference a Javascript file in your template. Get it, and all dependencies, in the right order, in the page. 
-- CI Friendly. No separate build process. No command line tools. 
-- Declare dependencies as comments with relative paths, i.e, `// @reference ../lib/jquery.1.7.2.js`
-- Reference entire directories instead of individual files with `// @reference ../lib`
-- Debug mode returns individual javascript files to the browser and dynamically responds to your changes.
-- Production mode bundles all javascript into a single minified download using Uglify.
+BrowsereXport. See?
 
-Because this isn't a CommonJS based system, you can use all the same javascript libraries and files you're already using. You can even use it with Ender, too, by referencing the unminified version, ie., `// @reference ../lib/ender.js`.
+##Usage
+
+	// make sure you've already defined app.
+	// it adds the object 'browserx' to app.locals, for use later on.
+	var browserx = require('browserx')({ applicationRoot : __dirname, locals : app.locals });
+
+	// add some middleware
+	app.use(browserx.middleware());
+
+	// Then in your layout.jade, give browserx your entry point JS.
+	// Make sure it's a path relative to /app.js, not the template.
+	!= browserx.upload('./lib/client.js')
 
 ##Status
 
-_Working, ready for real world testing_ 
-
-##Known issues
-
-- Some test coverage for debug and production mode specific behaviours not there yet
-- Insufficient documentation.
-- No ability to reference external scripts yet
-- Insufficient real world testing to know what the known issues really are.
-
-##Background
-
-Cassette-Express is an adaptation of Andrew Davey's Cassette (https://github.com/andrewdavey/cassette), a .net package which helps developers manage CSS, Javascript, Coffeescript assets. It is amazingly useful. I wanted to use the same client side javascript in Node projects and discovered the same functionality - working with any javascript, not just CommonJS modules - didn't exist. 
-
-##Installing
-
-	npm install cassette-express
-
-##Implementation
-
-In typical ExpressJS app.js file, assuming you're still using the default /public/javascripts 
-
-	// debug mode, every request the files are checked for changes & individual file downloads.
-	var cassette = require('cassette-express')();
-
-	// or production mode, generated once per restart. One single minified download.
-	var cassette = require('cassette-express')({ mode : 'production' });
-
-A little later on in app.js we make sure we have access to Cassette inside the templates..
-
-	app.set('view options', {
-		assets : cassette.middleware()
-	});
-
-
-Then in our template, i.e, layout.jade:
-
-	!= assets.useAsset('/app/client-app.js')
-
-Which, in debug mode, would output something like...
-
-	<script src="/javascripts/lib/jquery.js"></script>
-	<script src="/javascripts/lib/jquery-someplugin.js"></script>
-	<script src="/javascripts/lib/jquery-some-other-plugin.js"></script>
-	<script src="/javascripts/lib/underscore.js"></script>
-	<script src="/javascripts/lib/my-own-library-stuff.js"></script>
-	<script src="/javascripts/app/app-namespace.js"></script>
-	<script src="/javascripts/app/features/navigator.js"></script>
-	<script src="/javascripts/app/features/content.js"></script>
-	<script src="/javascripts/app/client-app.js"></script>
-
-And in production mode all those scripts are merged, minified and then you get...
-
-	<script src="/javascripts/cassette/AEEE546E7B7C7BCEBC.min.js"></script>
-
-By default the compiled files are put in /public/javascripts/cassette. 
-
-The gathering and sorting of dependencies is done automatically. In debug mode bundles are reassembled if there are any changes to teh sources. In production mode, node must be restarted before a new minified bundle is generated.
-
-##Example
-
-In the repo, in the EXAMPLE folder, there's a skeleton Express.js application. The files of interest are app.js, views/index.jade and the javascript files in /public/javascripts. If you go into this folder, do `npm install` then `node app.js` you can test it's working.
-
-
-##Cassette Options
-
-The only real configuration is to do with paths. 
-
-	// this...
-	var cassette = require('cassette-express')();
-	// is a shortcut for..
-	var cassette = require('cassette-express')({
-			assetsPath : '/public/javascripts',
-			outputPath : '/javascripts',
-			buildPath : '/cassette',
-			mode : 'debug'
-		})
-
-If your javascript assets are somewhere else, this is how you would configure that. It's probably best to leave the buildPath as '/cassette' - this makes your minified bundles output to `/public/javascripts/cassette` by default. 
-
-This API is pretty horrible. Sorry.
-
-##Next Steps
-
-- Integration with Amazon S3 to allow automatic upload of minified bundles
-- Add a dependency by referencing an external file, have that file downloaded and added to your bundle. 
-- If people want it, I could add automatic Coffeescript compiling. So far no-one wants it.
-
-## Differences between Cassette-Express and Cassette MVC
-
-- Bundles are automatically generated by requesting any particular resource inside templates. You don't need to pre-reference them.
-- Bundles will always be one single file in production mode, not multiple files depending on how they were pre-referenced.
-- No automagic coffeescript compiling. Poor Coffeescript.
-- No stylesheet merging/compiling.
-- Significantly less features. Ha.
+Hideously early. Works like Browserify, but without requiring a build step or unit tests. 
